@@ -1,0 +1,22 @@
+header.row        
+  nav.navbar.navbar-default
+    .container-fluid
+      .navbar-header
+        a.navbar-brand(href='#')
+          img.logo(alt='Brand', src='/images/logo.png')
+      ul.nav.navbar-nav.navbar-right
+        if(user)
+          li.dropdown
+            img.profile-small(alt="#{fullname}", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            a.dropdown-toggle.nav-dropdown(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+              | Karthik 
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href='#') Settings
+              li
+                a(href='#') Logout
+        else
+          li.dropdown
+            a(href='/login')
+              | Login

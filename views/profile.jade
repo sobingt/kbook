@@ -1,28 +1,8 @@
-html
-  head
-    title= Kbook
-    link(rel="stylesheet", type="text/css", href="vendor/bootstrap/dist/css/bootstrap.css")
-    link(rel="stylesheet", type="text/css", href="vendor/bootstrap/dist/css/bootstrap-theme.css")
-    link(rel="stylesheet", type="text/css", href="css/style.css")
-  body
+extends layout
+
+block content
     #wrapper.container
-      header.row        
-        nav.navbar.navbar-default
-          .container-fluid
-            .navbar-header
-              a.navbar-brand(href='#')
-                img.logo(alt='Brand', src='images/logo.png')
-            ul.nav.navbar-nav.navbar-right
-              li.dropdown
-                img.profile-small(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
-                a.dropdown-toggle.nav-dropdown(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                  | Karthik 
-                  span.caret
-                ul.dropdown-menu
-                  li
-                    a(href='#') Settings
-                  li
-                    a(href='#') Logout
+      include partials/nav.jade
       #content.row
         .col-md-2.sidebar
             .row.profile-image
@@ -30,14 +10,24 @@ html
               ul.profile-info
                 li 
                   i.glyphicon.glyphicon-user
-                  | &nbsp; Kartik
+                  | &nbsp; #{user.fullname}
                 li 
                   i.glyphicon.glyphicon-info-sign
-                  | &nbsp; 32 years
+                  | &nbsp; #{user.age} years
                 li 
-                  img.gender-icon(src="images/gender-icon.png")
-                  | &nbsp; Male
+                  img.gender-icon(src="/images/gender-icon.png")
+                  | &nbsp; #{user.gender}
         .col-md-9
-          p Profile Content Page
-    script(src="vendor/jquery/dist/jquery.js")
-    script(src="vendor/bootstrap/dist/js/bootstrap.js")
+          .grid.js-masonry(data-masonry-options='{ "itemSelector": ".grid-item", "columnWidth": 200 }')
+            .grid-item
+              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            .grid-item
+              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            .grid-item
+              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            .grid-item
+              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            .grid-item
+              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            .grid-item
+              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")

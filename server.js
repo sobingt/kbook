@@ -33,9 +33,16 @@ app.set('view engine','jade');
 //Home Page route
 app.get('/',homeController.index);
 
-//GET Profile Page
-app.get('/profile',userController.getProfile);
+//GET Current User Profile Page
+app.get('/profile',userController.getCurrentUserProfile);
 
+//GET user Profile Page
+app.get('/users/:id',userController.getUserProfile);
+
+//GET Login Page
+app.get('/login',userController.getLogin);
+
+app.post('/login',userController.postLogin);
 //Start server at port 3000
 app.listen(3000,function(){
 	console.log("Server is running at 3000");
