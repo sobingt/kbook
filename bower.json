@@ -1,0 +1,26 @@
+{
+  "name": "kbook",
+  "version": "1.0.0",
+  "homepage": "https://github.com/sobingt/kbook",
+  "authors": [
+    "Sobin George Thomas <sobingt@gmail.com>"
+  ],
+  "description": "social network called kbook",
+  "main": "index.html",
+  "keywords": [
+    "social",
+    "network",
+    "kbook"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5"
+  }
+}
