@@ -6,6 +6,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var homeController = require('./controllers/home');
+var userController = require('./controllers/user');
 //Express Object
 var app = express();
 
@@ -29,9 +31,10 @@ app.set('view engine','jade');
 
 //Routers
 //Home Page route
-app.get('/',function(req, res, next){
-	res.render('index');
-});
+app.get('/',homeController.index);
+
+//GET Profile Page
+app.get('/profile',userController.getProfile);
 
 //Start server at port 3000
 app.listen(3000,function(){

@@ -1,0 +1,63 @@
+.logo {
+    height: 41px;
+    margin-top: -12px;
+}
+
+.nav-dropdown {
+    display: inline !important;
+}
+
+img.profile-small {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.profile-image {
+    height: 173px;
+    width: 167px;
+    margin: 5px;
+    margin-bottom: 23px;
+    background: url('https://graph.facebook.com/100000384512724/picture?type=large') center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 17px;
+}
+
+ul.profile-info li {
+    list-style: none;
+    margin-bottom: 13px;
+    font-size: 16px;
+}
+
+ul.profile-info {
+    padding-left: 0;
+    margin-left: 20px;
+}
+
+.sidebar {
+    height: 100%;
+    background-color: #ededed;
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#wrapper {
+    height: 100%;
+}
+
+#content {
+    height: 100%;
+}
+
+.gender-icon {
+    height: 20px;
+    width: 20px;
+}
+
