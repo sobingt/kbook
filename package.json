@@ -1,0 +1,33 @@
+{
+  "name": "kbook",
+  "version": "1.0.0",
+  "description": "Social Network",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sobingt/kbook.git"
+  },
+  "keywords": [
+    "social",
+    "network",
+    "kbook"
+  ],
+  "author": "Sobin George Thomas <sobingt@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sobingt/kbook/issues"
+  },
+  "homepage": "https://github.com/sobingt/kbook",
+  "dependencies": {
+    "body-parser": "1.14.0",
+    "cookie-parser": "1.4.0",
+    "express": "4.13.3",
+    "jade": "1.11.0",
+    "morgan": "1.6.1",
+    "path": "^0.12.7",
+    "serve-favicon": "2.3.0"
+  }
+}
