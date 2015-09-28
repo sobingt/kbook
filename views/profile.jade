@@ -25,8 +25,12 @@ block content
                       a(href="/users/#{friend.username}") #{friend.username} &nbsp;
 
                 if user.id != currentUserId
-                  a.btn.btn-primary(href="/addFriend/#{user.username}")
-                    | Add as friend
+                  if isFriend
+                    a.btn.btn-primary(href="/addFriend/#{user.username}")
+                      | Add as friend
+                  else
+                    a.btn.btn-primary(href="/unFriend/#{user.username}")
+                      | Unfriend
         .col-md-9
           .grid.js-masonry(data-masonry-options='{ "itemSelector": ".grid-item", "columnWidth": 200 }')
             .grid-item

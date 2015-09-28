@@ -69,7 +69,7 @@ exports.usersData=[
     'id': 4,
     'username': 'alistermendes',
     'name' : 'Alister',
-    'fullname': 'Akshay Mendes',
+    'fullname': 'Alister Mendes',
     'age': '22',
     'gender': 'Male',
     'college': 'Xavier',

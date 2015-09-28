@@ -103,7 +103,7 @@ exports.postLogin = function(req, res){
     req.flash('errors',{msg: "Error"});
     res.redirect('/login');
   }
-    
+
 }
 
 
@@ -114,4 +114,15 @@ exports.getAddFriend = function(req, res){
   var currentUser = getUserById(currentUserId);
   currentUser.friends.push({user_id : requester.id});
   res.json(currentUser);
+}
+
+//GET Unfriend
+exports.getUnfriend = function(req,res){
+  var requesterId = req.params.username;
+  var requester = getUserByUsername(requesterId);
+  var currentUser = getUserById(currentUserId);
+  var indexOf = requester.friends.indexOf(currentUser);
+  console.log(indexOf);
+  var removed = requester.friends.splice(indexOf,1);
+  console.log(removed);
 }

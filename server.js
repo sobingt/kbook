@@ -60,6 +60,9 @@ app.get('/users/:username', userController.getProfileByUsername);
 //Add Friend request
 app.get('/addFriend/:username', userController.getAddFriend);
 
+//Unfriend request
+app.get('/unFriend/:username',userController.getUnfriend);
+
 //GET Current User Profile Page
 app.get('/profile',userController.getCurrentUserProfile);
 
