@@ -5,7 +5,7 @@ block content
       include partials/nav.jade
       #content.row
         .col-md-2.sidebar
-            .row.profile-image
+            .row.profile-image(style="background-image:url('#{user.pic}')")
             .row.profile-info-box
               ul.profile-info
                 li 
@@ -20,14 +20,14 @@ block content
         .col-md-9
           .grid.js-masonry(data-masonry-options='{ "itemSelector": ".grid-item", "columnWidth": 200 }')
             .grid-item
-              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+              img(alt="#{user.fullname}", src="#{user.pic}")
             .grid-item
-              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+              img(alt="#{user.fullname}", src="#{user.pic}")
             .grid-item
-              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+              img(alt="#{user.fullname}", src="#{user.pic}")
             .grid-item
-              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+              img(alt="#{user.fullname}", src="#{user.pic}")
             .grid-item
-              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+              img(alt="#{user.fullname}", src="#{user.pic}")
             .grid-item
-              img(alt="Karthik", src="https://graph.facebook.com/100000384512724/picture?type=large")
+              img(alt="#{user.fullname}", src="#{user.pic}")

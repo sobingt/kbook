@@ -18,7 +18,7 @@ img.profile-small {
     width: 167px;
     margin: 5px;
     margin-bottom: 23px;
-    background: url('https://graph.facebook.com/100000384512724/picture?type=large') center;
+    background-position: center;
     margin-left: auto;
     margin-right: auto;
     margin-top: 17px;
@@ -61,5 +61,10 @@ html, body {
     width: 20px;
 }
 
+a.container {
+    letter-spacing: 10px;
 
-  
+}
+a.dropdown-toggle.nav-dropdown {
+    letter-spacing: 0;
+}

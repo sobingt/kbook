@@ -7,9 +7,9 @@ header.row
       ul.nav.navbar-nav.navbar-right
         if(user)
           li.dropdown
-            img.profile-small(alt="#{fullname}", src="https://graph.facebook.com/100000384512724/picture?type=large")
+            img.profile-small(alt= "#{user.fullname}", src="#{user.pic}")
             a.dropdown-toggle.nav-dropdown(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-              | Karthik 
+              | #{user.name}
               span.caret
             ul.dropdown-menu
               li

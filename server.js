@@ -32,15 +32,20 @@ app.set('view engine','jade');
 //Routers
 //Home Page route
 app.get('/',homeController.index);
-
+/*
 //GET Current User Profile Page
 app.get('/profile',userController.getCurrentUserProfile);
 
 //GET user Profile Page
 app.get('/users/:id',userController.getUserProfile);
-
+*/
 //GET Login Page
 app.get('/login',userController.getLogin);
+
+//GET Profiles by Username in Homepage
+app.get('/users/:username', userController.getProfile);
+
+app.get('/error500', function(){});
 
 app.post('/login',userController.postLogin);
 //Start server at port 3000
