@@ -17,17 +17,27 @@ block content
                 li 
                   img.gender-icon(src="/images/gender-icon.png")
                   | &nbsp; #{user.gender}
+                if user.friends
+                  li 
+                    | Has #{user.friends.length} friends #{currentUserId}
+                  li
+                    each friend in user.friends
+                      a(href="/users/#{friend.username}") #{friend.username} &nbsp;
+
+                if user.id != currentUserId
+                  a.btn.btn-primary(href="/addFriend/#{user.username}")
+                    | Add as friend
         .col-md-9
           .grid.js-masonry(data-masonry-options='{ "itemSelector": ".grid-item", "columnWidth": 200 }')
             .grid-item
-              img(alt="#{user.fullname}", src="#{user.pic}")
+              | Grid Page 1
             .grid-item
-              img(alt="#{user.fullname}", src="#{user.pic}")
+              | Grid Page 1
             .grid-item
-              img(alt="#{user.fullname}", src="#{user.pic}")
+              | Grid Page 1
             .grid-item
-              img(alt="#{user.fullname}", src="#{user.pic}")
+              | Grid Page 1
             .grid-item
-              img(alt="#{user.fullname}", src="#{user.pic}")
+              | Grid Page 1
             .grid-item
-              img(alt="#{user.fullname}", src="#{user.pic}")
+              | Grid Page 1

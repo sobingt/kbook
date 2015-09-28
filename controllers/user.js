@@ -1,134 +1,48 @@
-var usersData=[
-  {
-    'id': 1,
-    'username': 'karthikv',
-    'name' : 'Karthik',
-    'fullname': 'Karthik V',
-    'age': '21',
-    'gender': 'Male',
-    'college': 'Xavier',
-    'city': 'Mumbai',
-    'email' : 'karthik.v1993@yahoo.com',
-    'password': '123',
-    'role': 'admin',
-    'pic' : "https://graph.facebook.com/100000384512724/picture?type=large"
-  },
-  {
-    'id': 2,
-    'username': 'sobingt',
-    'name' : 'Sobin',
-    'fullname': 'Sobin George Thomas',
-    'age': '27',
-    'gender': 'Male',
-    'college': 'Xavier',
-    'city': 'Mumbai',
-    'email' : 'sobingt@gmail.com',
-    'password': '123',
-    'role': 'user',
-    'pic' : "https://graph.facebook.com/100000483391087/picture?type=large"
-  },
-  {
-    'id': 3,
-    'username': 'akshayiyer378',
-    'name' : 'Akshay',
-    'fullname': 'Akshay Iyer',
-    'age': '22',
-    'gender': 'Male',
-    'college': 'NL',
-    'city': 'Mumbai',
-    'email' : 'akshayiyer@gmail.com',
-    'password': '123',
-    'role': 'user',
-    'pic': "https://graph.facebook.com/689038812/picture?type=large"
-  },
-  {
-    'id': 4,
-    'username': 'alistermendes',
-    'name' : 'Alister',
-    'fullname': 'Akshay Mendes',
-    'age': '22',
-    'gender': 'Male',
-    'college': 'Xavier',
-    'city': 'Mumbai',
-    'email' : 'alistermendes@gmail.com',
-    'password': '123',
-    'role': 'user',
-    'pic': "https://graph.facebook.com/100000100366602/picture?type=large"
-  },  
-  {
-    'id': 5,
-    'username': 'joaquimfranco146',
-    'name' : 'Joaquim',
-    'fullname': 'Joaquim Franco',
-    'age': '22',
-    'gender': 'Male',
-    'college': 'Xavier',
-    'city': 'Mumbai',
-    'email' : 'joaquim@gmail.com',
-    'password': '123',
-    'role': 'user',
-    'pic': "https://graph.facebook.com/100002427628807/picture?type=large"
-  },
-  {
-    'id': 6,
-    'username': 'heenalunadkat',
-    'name' : 'Heenal',
-    'fullname': 'Heenal Unadkat',
-    'age': '22',
-    'gender': 'Female',
-    'college': 'Xavier',
-    'city': 'Mumbai',
-    'email' : 'heenal@gmail.com',
-    'password': '123',
-    'role': 'user',
-    'pic': "https://graph.facebook.com/100000027807245/picture?type=large"
-  },
-  {
-    'id': 7,
-    'username': 'shrutik.k7',
-    'name' : 'Shrutik',
-    'fullname': 'Shrutik Katchhi',
-    'age': '22',
-    'gender': 'Male',
-    'college': 'Xavier',
-    'city': 'Mumbai',
-    'email' : 'shrutik.k7@gmail.com',
-    'password': '123',
-    'role': 'user',
-    'pic': "https://graph.facebook.com/100000272199579/picture?type=large"
-  }
-];
+var userModel = require('../models/User');
 
 var currentUserId= 1;
 var isLoggedIn = true;
 
 var getUserById = function(id){
-  for(var i=0;i<usersData.length;i++)
+  for(var i=0;i<userModel.usersData.length;i++)
   {
-    if(id==usersData[i].id)
-      return usersData[i];
+    if(id==userModel.usersData[i].id)
+      return userModel.usersData[i];
   }
   return 0;
 }
 var getUserByEmail = function(email){
-  for(var i=0;i<usersData.length;i++)
+  for(var i=0;i<userModel.usersData.length;i++)
   {
     console.log(i);
-    if(email==usersData[i].email)
-      return usersData[i];
+    if(email==userModel.usersData[i].email)
+      return userModel.usersData[i];
   }
   return 0;
 }
 
 var getUserByUsername = function(username){
-  for(var i=0;i<usersData.length;i++)
+  for(var i=0;i<userModel.usersData.length;i++)
   {
-    if(username==usersData[i].username)
-      return usersData[i];
+    if(username==userModel.usersData[i].username)
+      return userModel.usersData[i];
   }
   return 0;
 }
 
+var populateFriendData = function(user) {
+  for(var i=0; i< user.friends.length; i++)
+  {
+    if(user.friends[i].user_id)
+    {
+        var friendId = user.friends[i].user_id;
+        var friend = getUserById(friendId);
+        user.friends[i] = friend;
+    }
+    console.log(user.friends[i]);
+  }
+  return user;
+}
 
 //Get Current User Profile
 exports.getCurrentUserProfile = function(req, res){
@@ -139,21 +53,35 @@ exports.getCurrentUserProfile = function(req, res){
   res.render('profile',data);
 }
 
-//Get User Profile
-exports.getUserProfile = function(req, res){
+//Get User Profile by ID
+exports.getProfileById = function(req, res){
   var user =getUserById(req.params.id);
-  var data = {
-    user : user
-  };
-  res.render('profile',data);
+  if(user!=0)
+  {
+    var data = {
+      user : user
+    };
+    res.render('profile',data);
+  }
+  else
+    res.render('error404');
 }
 
-exports.getProfile = function(req, res){
+exports.getProfileByUsername = function(req, res){
   var user =getUserByUsername(req.params.username);
-  var data = {
-    user : user
-  };
-  res.render('profile',data);
+  if(user!=0)
+    {
+      if(user.friends)
+      {
+        user = populateFriendData(user);
+      }
+      var data = {
+        user : user
+      };
+      res.render('profile',data);
+    }
+    else
+      res.render('error404');
 }
 
 //Get User Profile
@@ -171,5 +99,19 @@ exports.postLogin = function(req, res){
     res.redirect('/users/'+validUser.username);
   }
   else
-    res.render('error404');
+  {
+    req.flash('errors',{msg: "Error"});
+    res.redirect('/login');
+  }
+    
+}
+
+
+//GET Add friend
+exports.getAddFriend = function(req, res){
+  var requesterId = req.params.username;
+  var requester = getUserByUsername(requesterId);
+  var currentUser = getUserById(currentUserId);
+  currentUser.friends.push({user_id : requester.id});
+  res.json(currentUser);
 }
