@@ -19,7 +19,22 @@ exports.usersData=[
         {
             user_id : 5
         }
-    ]
+    ],
+    'blocked':[
+        {
+            user_id : 6
+        }
+    ],
+    'requests':[
+        {
+            user_id : 7,
+            status: "new"
+        },
+        {
+            user_id : 6,
+            status: "new"
+        }
+    ],
   },
   {
     'id': 2,
@@ -128,7 +143,12 @@ exports.usersData=[
     'email' : 'heenal@gmail.com',
     'password': '123',
     'role': 'user',
-    'pic': "https://graph.facebook.com/100000027807245/picture?type=large"
+    'pic': "https://graph.facebook.com/100000027807245/picture?type=large",
+    'blocked':[
+        {
+            user_id : 1
+        }
+    ]
   },
   {
     'id': 7,

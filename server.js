@@ -57,8 +57,16 @@ app.get('/login',userController.getLogin);
 //GET Profiles by Username in Homepage
 app.get('/users/:username', userController.getProfileByUsername);
 
-//Add Friend request
+//Request to Add as Friend
+app.get('/requestAddFriend/:username', userController.getAddFriend);
+
+//GET Add ad Friend
 app.get('/addFriend/:username', userController.getAddFriend);
+
+//GET Ignore Friend
+app.get('/ignoreFriend/:username', userController.getIgnoreFriend);
+//GET Block Friend
+app.get('/blockFriend/:username', userController.getBlockFriend);
 
 //Unfriend request
 app.get('/unFriend/:username',userController.getUnfriend);
@@ -73,3 +81,4 @@ app.post('/login',userController.postLogin);
 app.listen(3000,function(){
 	console.log("Server is running at 3000");
 });
+

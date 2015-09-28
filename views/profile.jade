@@ -8,17 +8,17 @@ block content
             .row.profile-image(style="background-image:url('#{user.pic}')")
             .row.profile-info-box
               ul.profile-info
-                li 
+                li
                   i.glyphicon.glyphicon-user
                   | &nbsp; #{user.fullname}
-                li 
+                li
                   i.glyphicon.glyphicon-info-sign
                   | &nbsp; #{user.age} years
-                li 
+                li
                   img.gender-icon(src="/images/gender-icon.png")
                   | &nbsp; #{user.gender}
                 if user.friends
-                  li 
+                  li
                     | Has #{user.friends.length} friends #{currentUserId}
                   li
                     each friend in user.friends
@@ -26,11 +26,19 @@ block content
 
                 if user.id != currentUserId
                   if isFriend
-                    a.btn.btn-primary(href="/addFriend/#{user.username}")
-                      | Add as friend
-                  else
                     a.btn.btn-primary(href="/unFriend/#{user.username}")
                       | Unfriend
+                  else
+                    a.btn.btn-primary(href="/addFriend/#{user.username}")
+                      | Add as friend
+                if user.requests
+                  each request in user.requests
+                    if(request.status=="new")
+                      p.alert.alert-info(role="alert") #{request.user_id.username} has send a request.
+                        br
+                        a.btn.btn-primary.btn-xs(href="/addFriend/#{request.user_id.username}") Accept
+                        a.btn.btn-warning.btn-xs(href="/ignoreFriend/#{request.user_id.username}") Ignore
+                        a.btn.btn-danger.btn-xs(href="/blockFriend/#{request.user_id.username}") Block
         .col-md-9
           .grid.js-masonry(data-masonry-options='{ "itemSelector": ".grid-item", "columnWidth": 200 }')
             .grid-item
