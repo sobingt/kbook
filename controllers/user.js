@@ -14,7 +14,7 @@ var getUserById = function(id){
 var getUserByEmail = function(email){
   for(var i=0;i<userModel.usersData.length;i++)
   {
-    console.log(i);
+    
     if(email==userModel.usersData[i].email)
       return userModel.usersData[i];
   }
@@ -39,7 +39,7 @@ var populateFriendData = function(user) {
         var friend = getUserById(friendId);
         user.friends[i] = friend;
     }
-    console.log(user.friends[i]);
+    
   }
   return user;
 }
@@ -115,7 +115,7 @@ exports.getAddFriend = function(req, res){
   currentUser.friends.push({user_id : requester.id});
   res.json(currentUser);
 }
-
+/*
 //GET Unfriend
 exports.getUnfriend = function(req,res){
   var requesterId = req.params.username;
@@ -123,6 +123,37 @@ exports.getUnfriend = function(req,res){
   var currentUser = getUserById(currentUserId);
   var indexOf = requester.friends.indexOf(currentUser);
   console.log(indexOf);
-  var removed = requester.friends.splice(indexOf,1);
+  var removed = requester.friends.splice(indexOf-1,1);
   console.log(removed);
 }
+*/
+exports.getUnfriend=function(req,res){
+  var requesteeUsername=req.params.username;
+  var requestee= getUserByUsername(requesteeUsername);
+  var currentUser = getUserById(currentUserId);
+  for(var i=0;i<requestee.friends.length;i++)
+  {
+
+    if(requestee.friends[i].id==currentUserId)
+    {
+      requestee.friends.splice(i,1);
+      
+    }
+    
+  }
+  for(var i=0;i<currentUser.friends.length;i++)
+  {
+    if(currentUser.friends[i].user_id==requestee.id)
+    {
+      currentUser.friends.splice(i,1);
+
+    }
+
+  }
+  res.redirect('/users/'+requesteeUsername)
+}
+
+
+
+
+
