@@ -1,4 +1,5 @@
-var userModel = require('../models/User');
+var userModel = require('../models/UserStatic');
+var User = require('../models/User');
 
 var currentUserId= 1;
 var isLoggedIn = true;
@@ -119,12 +120,12 @@ exports.getProfileByUsername = function(req, res)
     res.render('error404');
 }
 
-//Get User Profile
+//Get Login Page
 exports.getLogin = function(req, res){
   res.render('login');
 }
 
-//Get User Profile
+//Post Login Request
 exports.postLogin = function(req, res){
   var email=req.body.email;
   var password=req.body.password;
@@ -138,6 +139,53 @@ exports.postLogin = function(req, res){
     req.flash('errors',{msg: "Error"});
     res.redirect('/login');
   }
+}
+
+//Get Signup Page
+exports.getSignUp = function(req, res){
+  res.render('signUp');
+}
+//Get Signup Page
+exports.postSignUp = function(req, res){
+  var fullname=req.body.fullname;
+  var username=req.body.username;
+  var email=req.body.email;
+  var password=req.body.password;
+  var user = new User({
+    'fullname':fullname,
+    'username': username,
+    'email': email,
+    'password': password
+  });
+  user.save(function(err,user){
+    res.redirect('/');
+  });
+}
+
+exports.getEditUser = function(req, res){
+  User.findOne({'username': req.params.username}).exec(function(err,user){
+    res.render('editUser',user);
+  });
+
+}
+
+exports.postEditUser = function(req, res, next){
+  var fullname=req.body.fullname;
+  var id=req.body.id;
+  var username=req.body.username;
+  var email=req.body.email;
+  var password=req.body.password;
+  User.findById(id).exec(function(err,user){
+    if (err) return next(err);
+    user.fullname =fullname;
+    user.username = username;
+    user.password = password;
+    user.email = email;
+    user.save();
+    res.redirect('/');
+  });
+
+
 }
 
 //GET Add friend

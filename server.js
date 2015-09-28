@@ -7,6 +7,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var session = require('express-session');
+var mongoose = require('mongoose');
+
 //Controllers
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
@@ -36,7 +38,11 @@ app.use(function(req, res, next){
   res.locals.currentUserId= 1;
   next();
 });
-
+mongoose.connect("mongodb://localhost:27017/kbook");
+mongoose.connection.on('error',function(){
+  console.log("Please connect to the MongoDb Server. There is a mongodb connection error.");
+  process.exit(1);
+});
 //Setting App paramaters
 //Set views folder as your views render directory
 app.set('views',path.join(__dirname,'views'));
@@ -53,6 +59,14 @@ app.get('/',homeController.index);
 
 //GET Login Page
 app.get('/login',userController.getLogin);
+//Post Login Request
+app.post('/login',userController.postLogin);
+
+app.get('/signUp',userController.getSignUp);
+app.post('/signUp',userController.postSignUp);
+
+app.get('/edit/:username',userController.getEditUser);
+app.post('/edit/:username',userController.postEditUser);
 
 //GET Profiles by Username in Homepage
 app.get('/users/:username', userController.getProfileByUsername);
@@ -76,7 +90,7 @@ app.get('/profile',userController.getCurrentUserProfile);
 
 app.get('/error500', function(){});
 
-app.post('/login',userController.postLogin);
+
 //Start server at port 3000
 app.listen(3000,function(){
 	console.log("Server is running at 3000");

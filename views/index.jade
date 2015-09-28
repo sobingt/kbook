@@ -4,7 +4,7 @@ block content
   #wrapper.container
     include partials/nav.jade
     h1 Welcome Kbook
-    h2 Some of our Users
+    h2 Some of our Static Users Data
     a(href='/users/karthikv') Karthik
     | &nbsp;
     a(href='/users/sobingt') Sobin
@@ -18,3 +18,8 @@ block content
     a(href='/users/heenalunadkat') Heenal
     | &nbsp;
     a(href='/users/shrutik.k7') Shrutik
+    h2 Some of our Dynamic Users Data
+    each user in users
+        a(href='/edit/#{user.username}') #{user.fullname}
+        | &nbsp;
+
