@@ -5,6 +5,7 @@ var userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    token: Array,
     fullname: String,
     age: Number,
     gender: {
@@ -12,7 +13,9 @@ var userSchema = new mongoose.Schema({
         default: 'Male'
     },
     username: String,
-    password: String
+    password: String,
+    facebook: String,
+    pic: String
 });
 
 module.exports = mongoose.model('User', userSchema);

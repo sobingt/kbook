@@ -1,4 +1,6 @@
 var userModel = require('../models/UserStatic');
+var passport = require('passport');
+
 var User = require('../models/User');
 
 var currentUserId= 1;
@@ -126,19 +128,20 @@ exports.getLogin = function(req, res){
 }
 
 //Post Login Request
-exports.postLogin = function(req, res){
+exports.postLogin = function(req, res, next){
   var email=req.body.email;
   var password=req.body.password;
-  var validUser = getUserByEmail(email);
-  if(validUser)
-  {
-    res.redirect('/users/'+validUser.username);
-  }
-  else
-  {
-    req.flash('errors',{msg: "Error"});
-    res.redirect('/login');
-  }
+  passport.authenticate('local', function(err, user, info){
+    if(err)
+      return next(err);
+    if(!user)
+      return res.redirect('/login')
+    req.logIn(user, function(err){
+      if(err)
+        return next(err);
+      res.redirect('/');
+    });
+  })(req, res, next); 
 }
 
 //Get Signup Page

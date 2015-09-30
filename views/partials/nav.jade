@@ -5,17 +5,17 @@ header.row
         a.navbar-brand(href='/')
           img.logo(alt='Brand', src='/images/logo.png')
       ul.nav.navbar-nav.navbar-right
-        if(user)
+        if(currentUser)
           li.dropdown
-            img.profile-small(alt= "#{user.fullname}", src="#{user.pic}")
+            img.profile-small(alt= "#{currentUser.fullname}", src="#{currentUser.pic}")
             a.dropdown-toggle.nav-dropdown(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-              | #{user.name}
+              | #{currentUser.fullname}
               span.caret
             ul.dropdown-menu
               li
                 a(href='#') Settings
               li
-                a(href='#') Logout
+                a(href='/logout') Logout
         else
           li.dropdown
             a(href='/login')
