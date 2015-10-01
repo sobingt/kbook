@@ -5,12 +5,12 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var User = require('../models/User');
 
 passport.serializeUser(function(user, done){
-  return done(null, user.id)
+  return done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done){
   User.findById(id, function(err, user){
-    return done(null, user);
+    return done(err, user);
   });
 });
 
@@ -33,37 +33,38 @@ passport.use(new LocalStrategy({usernameField: 'email'},function(email, password
 }));
 
 passport.use(new FacebookStrategy({ 
-    clientID: '754220301289665', 
-    clientSecret: '41860e58c256a3d7ad8267d3c1939a4a', 
+    clientID: '1666416613575436', 
+    clientSecret: '162cb61fc4a9c53e3284e014c985faa7', 
     callbackURL: '/auth/facebook/callback', 
     passReqToCallback: true 
   },function(req, accessToken, refreshToken, profile, done){
   //check if facebook id give us a user object or null
-
+    if(req.user)
+    {
     //there is a user object coming in this scope
 
     //Check if the user is already registed in the database by his/her facebook id
-    User.findOne({facebook : profile.id},function(err, user){
-      if(user)
-      {
-        //Exsiting User from facebook
-        console.log("User already registed with facebook");
-        return done(null)
-      }
-      else
-      {
-        //user is not registered with facebook 
-        User.findOne({email: profile._json.email}, function(err, user){
-          if(user)
-          {
-            user.facebook = profile.id;
-            user.token.push({ type: 'facebook', accessToken: accessToken});
-            user.fullname = user.fullname || profile.displayName;
-            user.gender = user.gender || profile.gender;
-            user.pic = user.pic || 'https://graph.facebook.com/'+ profile.id + '/picture?type=large';
-            user.save(function(err){
-              console.log('Profile Updated');
-              done(err, user);
+      User.findOne({facebook : profile.id},function(err, user){
+        if(user)
+        {
+          //Exsiting User from facebook
+          console.log("User already registed with facebook");
+          return done(err);
+        }
+        else
+        {
+          //user is not registered with facebook 
+          User.findOne({email: profile._json.email}, function(err, user){
+            if(user)
+            {
+              user.facebook = profile.id;
+              user.token.push({ type: 'facebook', accessToken: accessToken});
+              user.fullname = user.fullname || profile.displayName;
+              user.gender = user.gender || profile._json.gender;
+              user.pic = user.pic || 'https://graph.facebook.com/'+ profile.id + '/picture?type=large';
+              user.save(function(err){
+                console.log('Profile Updated');
+                done(err, user);
             });
           }
           else
@@ -89,4 +90,4 @@ passport.use(new FacebookStrategy({
 
     });
 
-  }));
+  }}));

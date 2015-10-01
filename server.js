@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(favicon(path.join(__dirname,"favicon.ico")));
+
 app.use(session({
   secret: 'Theg7',
   resave: true,
@@ -38,18 +39,20 @@ app.use(session({
     autoReconnect: true
   })
 }));
+
 app.use(flash());
 app.use(function(req, res, next){
   res.locals.errors = req.flash('errors');
-  res.locals.currentUserId= 1;
   next();
 });
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;
   next();
 });
+
 mongoose.connect("mongodb://localhost:27017/kbook");
 mongoose.connection.on('error',function(){
   console.log("Please connect to the MongoDb Server. There is a mongodb connection error.");
@@ -81,27 +84,36 @@ app.post('/signUp',userController.postSignUp);
 app.get('/edit/:username',userController.getEditUser);
 app.post('/edit/:username',userController.postEditUser);
 
-//GET Profiles by Username in Homepage
-app.get('/users/:username', userController.getProfileByUsername);
+app.get('/users/:username', userController.getProfile);
+app.get('/addFriend/:username', userController.isLoggedIn, userController.addFriend);
+app.get('/addRequest/:username', userController.isLoggedIn, userController.addRequest); 
+app.get('/unfriend/:username', userController.isLoggedIn, userController.unfriend);
+app.get('/ignoreFriend/:username', userController.isLoggedIn, userController.ignoreFriend);
+app.get('/blockFriend/:username', userController.isLoggedIn, userController.blockFriend);
+// //GET Profiles by Username in Homepage
+// app.get('/users/:username', userController.getProfileByUsername);
 
-//Request to Add as Friend
-app.get('/requestAddFriend/:username', userController.getAddFriend);
+// //Request to Add as Friend
+// app.get('/requestAddFriend/:username', userController.getAddFriend);
 
-//GET Add ad Friend
-app.get('/addFriend/:username', userController.getAddFriend);
+// //GET Add ad Friend
+// app.get('/addFriend/:username', userController.getAddFriend);
 
-//GET Ignore Friend
-app.get('/ignoreFriend/:username', userController.getIgnoreFriend);
-//GET Block Friend
-app.get('/blockFriend/:username', userController.getBlockFriend);
+// //GET Ignore Friend
+// app.get('/ignoreFriend/:username', userController.getIgnoreFriend);
+// //GET Block Friend
+// app.get('/blockFriend/:username', userController.getBlockFriend);
 
-//Unfriend request
-app.get('/unFriend/:username',userController.getUnfriend);
+// //Unfriend request
+// app.get('/unFriend/:username',userController.getUnfriend);
 
-//GET Current User Profile Page
-app.get('/profile',userController.getCurrentUserProfile);
+// //UnblockFriend request
+// app.get('/unblockFriend/:username',userController.getUnblockFriend);
 
-app.get('/error500', function(){});
+// //GET Current User Profile Page
+// app.get('/profile',userController.getCurrentUserProfile);
+
+// app.get('/error500', function(){});
 
 //Third path auth Routes
 app.get('/auth/facebook',passport.authenticate('facebook', { scope: ['email']}));
@@ -116,4 +128,3 @@ app.get('/logout', function(req, res){
 app.listen(3000,function(){
 	console.log("Server is running at 3000");
 });
-

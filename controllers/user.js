@@ -3,124 +3,11 @@ var passport = require('passport');
 
 var User = require('../models/User');
 
-var currentUserId= 1;
-var isLoggedIn = true;
-
-var getUserById = function(id){
-  for(var i=0;i<userModel.usersData.length;i++)
-  {
-    if(id==userModel.usersData[i].id)
-      return userModel.usersData[i];
-  }
-  return 0;
-}
-var getUserByEmail = function(email){
-  for(var i=0;i<userModel.usersData.length;i++)
-  {
-    
-    if(email==userModel.usersData[i].email)
-      return userModel.usersData[i];
-  }
-  return 0;
-}
-
-var getUserByUsername = function(username){
-  for(var i=0;i<userModel.usersData.length;i++)
-  {
-    if(username==userModel.usersData[i].username)
-      return userModel.usersData[i];
-  }
-  return 0;
-}
-
-var populateFriendData = function(user) {
-  for(var i=0; i< user.friends.length; i++)
-  {
-    if(user.friends[i].user_id)
-    {
-        var friendId = user.friends[i].user_id;
-        var friend = getUserById(friendId);
-        user.friends[i] = friend;
-    }
-    
-  }
-  return user;
-}
-var populateRequesterData = function(user) {
-  for(var i=0; i< user.requests.length; i++)
-  {
-    if(!user.requests[i].user_id.id)
-    {
-        var requesterId = user.requests[i].user_id;
-        var requester = getUserById(requesterId);
-        user.requests[i].user_id = requester;
-    }
-    
-  }
-  return user;
-}
-
-//Get Current User Profile
-exports.getCurrentUserProfile = function(req, res){
-  var user =getUserById(currentUserId);
-  var data = {
-    user : user
-  };
-  res.render('profile',data);
-}
-
-//Get User Profile by ID
-exports.getProfileById = function(req, res){
-  var user =getUserById(req.params.id);
-  if(user!=0)
-  {
-    var data = {
-      user : user
-    };
-    res.render('profile',data);
-  }
-  else
-    res.render('error404');
-}
 
 
-exports.getProfileByUsername = function(req, res)
-{
-  var user =getUserByUsername(req.params.username);
-  var currentUser = getUserById(currentUserId);
-  var isBlock = false;
-  console.log(currentUser.blocked);
-  for(var i =0; i<currentUser.blocked.length;i++)
-  {
-    if(currentUser.blocked[i].user_id==user.id)
-      isBlock = true;
-  }
-  if(user!=0 && !isBlock)
-  {
-      var isFriend = false;
-      if(user.friends)
-      {
-        user = populateFriendData(user);
-        for(var i=0;i<user.friends.length;i++)
-        {
-          if(user.friends[i].id==currentUserId)
-            isFriend = true;
-        }
-      }
-      if(user.requests)
-      {
-        user = populateRequesterData(user);
 
-      }
-      var data = {
-        user : user,
-        isFriend: isFriend
-      };
-      res.render('profile',data);
-  }
-  else
-    res.render('error404');
-}
+
+
 
 //Get Login Page
 exports.getLogin = function(req, res){
@@ -191,80 +78,151 @@ exports.postEditUser = function(req, res, next){
 
 }
 
-//GET Add friend
-exports.getAddFriend = function(req, res){
-  var requesterId = req.params.username;
-  var requester = getUserByUsername(requesterId);
-  var currentUser = getUserById(currentUserId);
-  if(!currentUser.friends)
-    currentUser.friends = [];
-  currentUser.friends.push({user_id : requester.id});
-  for(var i=0;i<currentUser.requests.length;i++)
-  {
-    if(currentUser.requests[i].user_id.id==requester.id)
-    {
-      currentUser.requests.splice(i,1);
-      
-    } 
-  }
-  
-  if(!requester.friends)
-    requester.friends = [];
-  requester.friends.push({user_id : currentUserId});
-
-  res.redirect('/users/'+requesterId);
+exports.isLoggedIn= function(req, res, next){
+  if(req.user)
+    next();
+  else
+    res.redirect("/login");
 }
 
-exports.getUnfriend=function(req,res){
-  var requesteeUsername=req.params.username;
-  var requestee= getUserByUsername(requesteeUsername);
-  var currentUser = getUserById(currentUserId);
-  for(var i=0;i<requestee.friends.length;i++)
-  {
-    if(requestee.friends[i].id==currentUserId)
+exports.getProfile = function(req, res, next){
+  var username = req.params.username;
+  User.findOne({username: username}).populate('friends').populate('requests.user_id').exec(function(err, user){
+    if(err)
+      return next(err);
+    if(!user)
+      res.render('error404');
+    for(var i=0; i<user.blocked.length;i++)
     {
-      requestee.friends.splice(i,1);
-      
-    } 
-  }
-  for(var i=0;i<currentUser.friends.length;i++)
-  {
-    if(currentUser.friends[i].user_id==requestee.id)
-    {
-      currentUser.friends.splice(i,1);
+      if(user.blocked[i].user_id.equals(req.user._id))
+        return res.render('error404');
     }
-  }
-  res.redirect('/users/'+requesteeUsername)
+    var isFriend = false;
+   
+    for(var i=0;i < user.friends.length;i++)
+    {
+      //console.log(user.friends[i]);
+      //console.log(req.user);
+      if(user.friends[i]._id.equals(req.user._id))
+      {
+        isFriend = true;
+      }
+         
+    }
+    var mutualFriends=[];
+    for(var i=0;i<user.friends.length;i++)
+    {
+      for(var j=0;j<req.user.friends.length;j++)
+      {
+        if(user.friends[i]._id.equals(req.user.friends[j]))
+          mutualFriends.push(user.friends[i].username);
+      }
+    }
+    var data = {
+      user : user,
+      isFriend : isFriend,
+      mutualFriends: mutualFriends
+    }
+    res.render('profile',data);
+  });
 }
 
-exports.getIgnoreFriend = function(req, res){
-  var requesterUsername=req.params.username;
-  var requester= getUserByUsername(requesterUsername);
-  var currentUser = getUserById(currentUserId);
-  for(var i=0;i<currentUser.requests.length;i++)
-  {
-    if(currentUser.requests[i].user_id.id==requester.id)
-    {
-      currentUser.requests[i].status ="ignore"
-    }
-  }
-  res.redirect("/users/"+currentUser.username);
+exports.addRequest=function(req,res,next){
+  var username=req.params.username;
+  User.findOne({username: username}).exec(function(err, user){
+    if(!user)
+      return res.render("error404");
+    user.requests.push({
+        user_id: req.user._id,
+        status: "new"
+    });
+    user.save();
+    res.redirect('/users/'+user.username);
+  });
 }
 
-exports.getBlockFriend = function(req, res){
-  var requesterUsername=req.params.username;
-  var requester= getUserByUsername(requesterUsername);
-  var currentUser = getUserById(currentUserId);
-  for(var i=0;i<currentUser.requests.length;i++)
-  {
-    if(currentUser.requests[i].user_id.id==requester.id)
+exports.addFriend = function(req, res, next){
+  var username = req.params.username;
+  User.findOne({username: username}).exec(function(err, user){
+    if(!user)
+      return res.render("error404");
+    //console.log(req.user.friends);
+    req.user.friends.push(user._id);
+    for(var i=0;i<req.user.requests.length;i++)
     {
-      currentUser.requests.splice(i,1);
-      if(!currentUser.blocked)
-        currentUser.blocked = [];
-      else
-        currentUser.blocked.push({user_id: requester.id})
+        if(req.user.requests[i].user_id.equals(user._id))
+        {
+          req.user.requests.splice(i,1);
+        }
     }
-  }
-  res.redirect("/users/"+currentUser.username);
+    user.friends.push(req.user._id);
+    user.save();
+    req.user.save();
+    res.redirect("/users/"+user.username);
+  });
+
 }
+
+exports.unfriend = function(req, res, next){
+  var username = req.params.username;
+  User.findOne({username: username}).exec(function(err, user){
+    if(!user)
+      return res.render("error404");
+    for(var i=0;i<user.friends.length;i++)
+    {
+      if(user.friends[i].equals(req.user._id))
+      {
+        user.friends.splice(i,1);
+      } 
+    }
+    
+    for(var i=0; i<req.user.friends.length;i++)
+    {
+      if(req.user.friends[i].equals(user._id))
+      {
+        req.user.friends.splice(i,1);
+      } 
+    }
+    user.save();
+    req.user.save();
+    res.redirect("/users/"+user.username);
+  });
+}
+
+exports.ignoreFriend = function(req, res, next){
+  var username = req.params.username;
+  User.findOne({username: username}).exec(function(err, user){
+    for(var i=0;i<req.user.requests.length;i++)
+      {
+        if(req.user.requests[i].user_id.equals(user._id))
+        {
+          req.user.requests[i].status ="ignore";
+          req.user.save();
+        }
+      }
+    res.redirect("/users/"+req.user.username);
+  });
+}
+
+exports.blockFriend = function(req, res, next){
+  var username=req.params.username;
+  User.findOne({username: username}).exec(function(err, user){
+    for(var i=0;i<req.user.requests.length;i++)
+    {
+      if(req.user.requests[i].user_id.equals(user._id))
+      {
+        req.user.requests.splice(i,1);
+        if(!req.user.blocked)
+          req.user.blocked = [];
+        else
+        { 
+          req.user.blocked.push({user_id: user._id})
+          req.user.requests[i].status ="block";
+          req.user.save();
+        }      
+      }
+    }
+    res.redirect("/users/"+req.user.username);
+});
+}
+
